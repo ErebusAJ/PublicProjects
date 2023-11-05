@@ -1,0 +1,131 @@
+import 'package:flutter/material.dart';
+import './movie_card.dart';
+
+import './movie_class.dart';
+
+void main() => runApp(MaterialApp(home: screen2()));
+
+class screen2 extends StatefulWidget {
+  const screen2({super.key});
+
+  @override
+  State<screen2> createState() => _screen2State();
+}
+
+class _screen2State extends State<screen2> {
+  final List<MovieClass> _moviesList = [
+    MovieClass(
+      "Demon Slayer: Mugen Train",
+      "A boy raised by boars, who wears a boar's head, boards the Infinity Train on a new mission with the Flame Pillar along with another boy who reveals his true power when he sleeps. Their mission is to defeat a demon who has been tormenting people and killing the demon slayers who oppose it.",
+    ),
+    MovieClass(
+      "One Piece: Red",
+      "Uta is a beloved singer, renowned for concealing her own identity when performing. Her voice is described as otherworldly. Now, for the first time ever, Uta will reveal herself to the world at a live concert.",
+    ),
+    MovieClass(
+      "Spirited Away",
+      "In this animated feature by noted Japanese director Hayao Miyazaki, 10-year-old Chihiro (Rumi Hiiragi) and her parents (Takashi Naitô, Yasuko Sawaguchi) stumble upon a seemingly abandoned amusement park. After her mother and father are turned into giant pigs, Chihiro meets the mysterious Haku (Miyu Irino), who explains that the park is a resort for supernatural beings who need a break from their time spent in the earthly realm, and that she must work there to free herself and her parents.",
+    ),
+    MovieClass(
+      "Weathering With You",
+      "Set during a period of exceptionally rainy weather, high-school boy Hodaka Morishima runs away from his troubled rural home to Tokyo and befriends an orphan girl who can manipulate the weather..",
+    ),
+    MovieClass(
+      "Suzume No Tojimari",
+      "As the skies turn red and the planet trembles, Japan stands on the brink of disaster. However, a determined teenager named Suzume sets out on a mission to save her country. Able to see supernatural forces that others cannot, it's up to her to close the mysterious doors that are spreading chaos across the land. A perilous journey awaits as the fate of Japan rests on her shoulders.",
+    ),
+  ];
+
+  final titleTextController = TextEditingController();
+  final descriptionTextController = TextEditingController();
+
+  late MovieClass newMovie;
+
+  void submit() {
+    newMovie = MovieClass(
+      titleTextController.text,
+      descriptionTextController.text,
+    );
+
+    setState(() {
+      _moviesList.add(newMovie);
+    });
+
+    Navigator.of(context).pop();
+
+    titleTextController.text = '';
+    descriptionTextController.text = '';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          "Movies",
+          style: TextStyle(
+            fontFamily: "Times New Roman",
+            fontSize: 24,
+            color: Color.fromRGBO(229, 9, 20, 30),
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+        backgroundColor: Colors.black,
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("images/netflixteaser.jpg"),
+            fit: BoxFit.cover,
+          ),
+          // gradient: LinearGradient(colors: [
+          //   Color.fromRGBO(46, 49, 146, 35),
+          //   // Color.fromRGBO(168, 144, 254, 35),
+          //   Color.fromRGBO(27, 255, 255, 35)
+          // ]),
+        ),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+              children: _moviesList.map((movie) {
+            return MovieInfoCard(movie);
+          }).toList()),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog<MovieClass>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text("Movie Info"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    autofocus: true,
+                    decoration: const InputDecoration(hintText: 'Title'),
+                    controller: titleTextController,
+                  ),
+                  TextField(
+                    autofocus: true,
+                    decoration: InputDecoration(hintText: 'Discription'),
+                    controller: descriptionTextController,
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: submit,
+                  style: TextButton.styleFrom(foregroundColor: Colors.red),
+                  child: const Text("Add"),
+                ),
+              ],
+            ),
+          );
+        },
+        backgroundColor: Colors.red,
+        child: const Icon(Icons.border_color_outlined),
+      ),
+    );
+  }
+}
